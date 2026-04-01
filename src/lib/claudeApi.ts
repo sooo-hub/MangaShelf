@@ -31,7 +31,7 @@ export class RateLimitError extends Error {
 
 async function callClaude(title: string): Promise<MangaCandidate[]> {
   const body = {
-    model: "claude-sonnet-4-5-20250929",
+    model: "claude-sonnet-4-6",
     max_tokens: 600,
     system: `漫画タイトルを受け取り、JSONのみ返してください。余計な文字なし。
 [{"title":"正式タイトル","author":"著者名","publisher":"出版社","latestVolume":最新巻の整数,"genre":"少年/少女/青年/女性/SF/ファンタジー/ラブコメ/ホラー/スポーツ/ミステリー/歴史/日常/その他","status":"連載中 or 完結"}]
@@ -85,7 +85,7 @@ export async function searchManga(
 
 export async function fetchLatestVolume(title: string): Promise<VolumeInfo> {
   const body = {
-    model: "claude-haiku-4-5-20251001",
+    model: "claude-haiku-4-5",
     max_tokens: 200,
     tools: [{ type: "web_search_20250305", name: "web_search" }],
     system: `漫画の最新刊情報をweb検索して調べ、以下のJSONのみ返してください。余計な文字なし。
