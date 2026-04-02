@@ -1,25 +1,11 @@
-import type { MangaCandidate, VolumeInfo, MangaStatus } from "../types/manga";
+/**
+ * 漫画情報取得ライブラリ
+ * Jikan API (MyAnimeList非公式・無料・認証不要) を使用
+ * https://jikan.moe/
+ */
+import type { MangaCandidate, VolumeInfo, MangaStatus, Genre } from "../types/manga";
 
-const API_URL = "https://api.anthropic.com/v1/messages";
-
-function getApiKey(): string {
-  const key = import.meta.env.VITE_ANTHROPIC_API_KEY as string | undefined;
-  if (!key) throw new Error("VITE_ANTHROPIC_API_KEY が設定されていません");
-  return key;
-}
-
-function getHeaders(useWebSearch = false): Record<string, string> {
-  const headers: Record<string, string> = {
-    "Content-Type": "application/json",
-    "x-api-key": getApiKey(),
-    "anthropic-version": "2023-06-01",
-    "anthropic-dangerous-direct-browser-access": "true",
-  };
-  if (useWebSearch) {
-    headers["anthropic-beta"] = "web-search-2025-03-05";
-  }
-  return headers;
-}
+const JIKAN_BASE = "https://api.jikan.moe/v4";
 
 export class RateLimitError extends Error {
   code: number;
@@ -29,98 +15,90 @@ export class RateLimitError extends Error {
   }
 }
 
-async function callClaude(title: string): Promise<MangaCandidate[]> {
-  const body = {
-    model: "claude-sonnet-4-6",
-    max_tokens: 600,
-    system: `漫画タイトルを受け取り、JSONのみ返してください。余計な文字なし。
-[{"title":"正式タイトル","author":"著者名","publisher":"出版社","latestVolume":最新巻の整数,"genre":"少年/少女/青年/女性/SF/ファンタジー/ラブコメ/ホラー/スポーツ/ミステリー/歴史/日常/その他","status":"連載中 or 完結"}]
-最大3候補。latestVolumeが不明なら0。不明な文字列は空文字。`,
-    messages: [{ role: "user", content: [{ type: "text", text: title }] }],
-  };
+// Jikan のジャンルを日本語にマッピング
+const GENRE_MAP: Record<string, Genre> = {
+  Action: "少年", Adventure: "少年", Fantasy: "ファンタジー",
+  "Sci-Fi": "SF", Comedy: "ラブコメ", Romance: "ラブコメ",
+  Horror: "ホラー", Sports: "スポーツ", Mystery: "ミステリー",
+  Historical: "歴史", "Slice of Life": "日常",
+  Shounen: "少年", Shoujo: "少女", Seinen: "青年", Josei: "女性",
+};
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: getHeaders(false),
-    body: JSON.stringify(body),
-  });
-
-  if (res.status === 429 || res.status === 529) throw new RateLimitError(res.status);
-  if (!res.ok) throw new Error("HTTP " + res.status);
-
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
-
-  const text = (data.content as Array<{ type: string; text?: string }> || [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text ?? "")
-    .join("");
-
-  const match = text.match(/\[[\s\S]*?\]/);
-  if (!match) throw new Error("情報が取得できませんでした");
-
-  return (JSON.parse(match[0]) as MangaCandidate[]).filter((x) => x.title);
+function mapGenre(genres: Array<{ name: string }>): Genre {
+  for (const g of genres) {
+    const mapped = GENRE_MAP[g.name];
+    if (mapped) return mapped;
+  }
+  return "その他";
 }
 
+function mapStatus(status: string): MangaStatus {
+  if (status === "Publishing") return "連載中";
+  if (status === "Finished") return "完結";
+  return "";
+}
+
+interface JikanManga {
+  mal_id: number;
+  title: string;
+  title_japanese?: string;
+  volumes: number | null;
+  status: string;
+  genres: Array<{ name: string }>;
+  themes: Array<{ name: string }>;
+  demographics: Array<{ name: string }>;
+  authors: Array<{ name: string }>;
+  serializations: Array<{ name: string }>;
+  score: number | null;
+}
+
+// ── searchManga: タイトルから漫画情報を検索 ──────────────
 export async function searchManga(
   title: string,
   onStatus?: (msg: string) => void
 ): Promise<MangaCandidate[]> {
-  for (let attempt = 0; attempt < 3; attempt++) {
-    try {
-      if (attempt > 0) {
-        const wait = attempt * 3000;
-        onStatus?.(`⏳ サーバー混雑中... ${wait / 1000}秒後に再試行 (${attempt}/2)`);
-        await new Promise((r) => setTimeout(r, wait));
-      }
-      onStatus?.("🔍 検索中...");
-      return await callClaude(title);
-    } catch (e) {
-      if (e instanceof RateLimitError && attempt < 2) continue;
-      throw e;
-    }
-  }
-  throw new Error("検索に失敗しました");
-}
+  onStatus?.("🔍 検索中...");
 
-export async function fetchLatestVolume(title: string): Promise<VolumeInfo> {
-  const body = {
-    model: "claude-haiku-4-5",
-    max_tokens: 200,
-    tools: [{ type: "web_search_20250305", name: "web_search" }],
-    system: `漫画の最新刊情報をweb検索して調べ、以下のJSONのみ返してください。余計な文字なし。
-{"latestVolume":最新巻の整数,"status":"連載中 or 完結"}
-不明な場合は{"latestVolume":0,"status":""}`,
-    messages: [
-      { role: "user", content: [{ type: "text", text: `「${title}」の最新巻数と連載状況` }] },
-    ],
-  };
+  const url = `${JIKAN_BASE}/manga?q=${encodeURIComponent(title)}&limit=5&order_by=popularity`;
+  const res = await fetch(url);
 
-  const res = await fetch(API_URL, {
-    method: "POST",
-    headers: getHeaders(true),
-    body: JSON.stringify(body),
+  if (res.status === 429) throw new RateLimitError(429);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+
+  const data = await res.json() as { data: JikanManga[] };
+  if (!data.data || data.data.length === 0) return [];
+
+  return data.data.map((m) => {
+    const allGenres = [...(m.genres ?? []), ...(m.themes ?? []), ...(m.demographics ?? [])];
+    return {
+      title: m.title_japanese ?? m.title,
+      author: m.authors?.map((a) => a.name.replace(/,\s*/, " ")).join("、") ?? "",
+      publisher: m.serializations?.[0]?.name ?? "",
+      latestVolume: m.volumes ?? 0,
+      genre: mapGenre(allGenres),
+      status: mapStatus(m.status),
+    };
   });
+}
 
-  if (res.status === 429 || res.status === 529) throw new RateLimitError(res.status);
-  if (!res.ok) throw new Error("HTTP " + res.status);
+// ── fetchLatestVolume: 最新刊・連載状況を取得 ────────────
+export async function fetchLatestVolume(title: string): Promise<VolumeInfo> {
+  const url = `${JIKAN_BASE}/manga?q=${encodeURIComponent(title)}&limit=1&order_by=popularity`;
+  const res = await fetch(url);
 
-  const data = await res.json();
-  if (data.error) throw new Error(data.error.message);
+  if (res.status === 429) throw new RateLimitError(429);
+  if (!res.ok) throw new Error(`HTTP ${res.status}`);
 
-  const text = (data.content as Array<{ type: string; text?: string }> || [])
-    .filter((b) => b.type === "text")
-    .map((b) => b.text ?? "")
-    .join("");
+  const data = await res.json() as { data: JikanManga[] };
+  if (!data.data || data.data.length === 0) {
+    return { latestVolume: 0, status: "" };
+  }
 
-  const match = text.match(/\{[\s\S]*?\}/);
-  if (!match) throw new Error("取得失敗");
-
-  const parsed = JSON.parse(match[0]) as { latestVolume?: number; status?: string };
+  const m = data.data[0];
   return {
-    latestVolume: parsed.latestVolume ?? 0,
-    status: (parsed.status as MangaStatus) ?? "",
+    latestVolume: m.volumes ?? 0,
+    status: mapStatus(m.status),
   };
 }
 
-export { API_URL };
+export { JIKAN_BASE };
