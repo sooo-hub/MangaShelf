@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
-import { searchManga, fetchLatestVolume, RateLimitError, JIKAN_BASE } from "../claudeApi";
+import { searchManga, fetchLatestVolume, RateLimitError, ANILIST_URL } from "../claudeApi";
 
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
@@ -12,32 +12,30 @@ function makeResponse(body: unknown, status = 200) {
   } as Response);
 }
 
-const sampleManga = {
-  mal_id: 13,
-  title: "One Piece",
-  title_japanese: "ワンピース",
-  volumes: 109,
-  status: "Publishing",
-  genres: [{ name: "Action" }],
-  themes: [],
-  demographics: [{ name: "Shounen" }],
-  authors: [{ name: "Oda, Eiichiro" }],
-  serializations: [{ name: "Shounen Jump (Weekly)" }],
-  score: 9.1,
+const sampleMedia = {
+  title: { native: "鬼滅の刃", romaji: "Kimetsu no Yaiba" },
+  volumes: 23,
+  status: "FINISHED",
+  genres: ["Action", "Adventure", "Drama"],
+  tags: [{ name: "Shounen", category: "Demographic" }],
+  staff: {
+    edges: [
+      { role: "Story & Art", node: { name: { full: "Koyoharu Gotouge", native: "吾峠呼世晴" } } },
+    ],
+  },
 };
 
-const completedManga = {
-  mal_id: 23,
-  title: "Kimetsu no Yaiba",
-  title_japanese: "鬼滅の刃",
-  volumes: 23,
-  status: "Finished",
-  genres: [{ name: "Action" }],
-  themes: [],
-  demographics: [{ name: "Shounen" }],
-  authors: [{ name: "Gotouge, Koyoharu" }],
-  serializations: [{ name: "Shounen Jump (Weekly)" }],
-  score: 8.8,
+const releasingMedia = {
+  title: { native: "ワンピース", romaji: "One Piece" },
+  volumes: null,
+  status: "RELEASING",
+  genres: ["Action", "Adventure", "Comedy"],
+  tags: [{ name: "Shounen", category: "Demographic" }],
+  staff: {
+    edges: [
+      { role: "Story & Art", node: { name: { full: "Eiichiro Oda", native: "尾田栄一郎" } } },
+    ],
+  },
 };
 
 // ── searchManga ──────────────────────────────────────────
@@ -45,69 +43,74 @@ const completedManga = {
 describe("searchManga", () => {
   beforeEach(() => { mockFetch.mockReset(); });
 
-  it("Jikan API の正しいエンドポイントを呼ぶ", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    await searchManga("ワンピース");
-    expect(mockFetch).toHaveBeenCalledWith(
-      expect.stringContaining(`${JIKAN_BASE}/manga?q=`)
-    );
+  it("AniList GraphQL エンドポイントを呼ぶ", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    await searchManga("鬼滅の刃");
+    expect(mockFetch).toHaveBeenCalledWith(ANILIST_URL, expect.objectContaining({ method: "POST" }));
   });
 
-  it("タイトルが URL エンコードされる", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    await searchManga("ワンピース");
-    const url = mockFetch.mock.calls[0][0] as string;
-    expect(url).toContain(encodeURIComponent("ワンピース"));
+  it("検索キーワードが variables に含まれる", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    await searchManga("鬼滅の刃");
+    const body = JSON.parse(mockFetch.mock.calls[0][1].body);
+    expect(body.variables.search).toBe("鬼滅の刃");
   });
 
-  it("日本語タイトルを優先して返す", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
+  it("日本語タイトルを返す", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    const result = await searchManga("鬼滅の刃");
+    expect(result[0].title).toBe("鬼滅の刃");
+  });
+
+  it("著者名(native)を返す", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    const result = await searchManga("鬼滅の刃");
+    expect(result[0].author).toBe("吾峠呼世晴");
+  });
+
+  it("巻数・完結ステータスを正しくマッピングする", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    const result = await searchManga("鬼滅の刃");
+    expect(result[0].latestVolume).toBe(23);
+    expect(result[0].status).toBe("完結");
+  });
+
+  it("RELEASING を連載中にマッピングする", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [releasingMedia] } } }));
     const result = await searchManga("ワンピース");
-    expect(result[0].title).toBe("ワンピース");
-  });
-
-  it("巻数・ステータスを正しくマッピングする (連載中)", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    const result = await searchManga("ワンピース");
-    expect(result[0].latestVolume).toBe(109);
     expect(result[0].status).toBe("連載中");
   });
 
-  it("ステータスを正しくマッピングする (完結)", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [completedManga] }));
-    const result = await searchManga("鬼滅");
-    expect(result[0].status).toBe("完結");
-    expect(result[0].latestVolume).toBe(23);
-  });
-
-  it("Shounen デモグラフィックを少年ジャンルにマッピングする", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    const result = await searchManga("ワンピース");
+  it("Shounen タグを少年ジャンルにマッピングする", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    const result = await searchManga("鬼滅の刃");
     expect(result[0].genre).toBe("少年");
   });
 
+  it("volumes が null の場合は 0 を返す", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [releasingMedia] } } }));
+    const result = await searchManga("ワンピース");
+    expect(result[0].latestVolume).toBe(0);
+  });
+
+  it("結果が空の場合は空配列を返す", async () => {
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [] } } }));
+    const result = await searchManga("存在しない漫画");
+    expect(result).toHaveLength(0);
+  });
+
   it("複数候補を返す", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga, completedManga] }));
+    mockFetch.mockReturnValueOnce(
+      makeResponse({ data: { Page: { media: [sampleMedia, releasingMedia] } } })
+    );
     const result = await searchManga("テスト");
     expect(result).toHaveLength(2);
   });
 
-  it("結果が空の場合は空配列を返す", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [] }));
-    const result = await searchManga("存在しない漫画XYZXYZ");
-    expect(result).toHaveLength(0);
-  });
-
-  it("volumes が null の場合は 0 を返す", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [{ ...sampleManga, volumes: null }] }));
-    const result = await searchManga("テスト");
-    expect(result[0].latestVolume).toBe(0);
-  });
-
   it("onStatus コールバックが呼ばれる", async () => {
     const onStatus = vi.fn();
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    await searchManga("ワンピース", onStatus);
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [sampleMedia] } } }));
+    await searchManga("鬼滅の刃", onStatus);
     expect(onStatus).toHaveBeenCalledWith("🔍 検索中...");
   });
 
@@ -130,32 +133,29 @@ describe("searchManga", () => {
 describe("fetchLatestVolume", () => {
   beforeEach(() => { mockFetch.mockReset(); });
 
-  it("最新刊情報を正しく取得する (連載中)", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    const result = await fetchLatestVolume("ワンピース");
-    expect(result.latestVolume).toBe(109);
-    expect(result.status).toBe("連載中");
-  });
-
-  it("完結作品を正しく取得する", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [completedManga] }));
+  it("最新刊・完結ステータスを正しく取得する", async () => {
+    mockFetch.mockReturnValueOnce(
+      makeResponse({ data: { Page: { media: [{ volumes: 23, status: "FINISHED" }] } } })
+    );
     const result = await fetchLatestVolume("鬼滅の刃");
     expect(result.latestVolume).toBe(23);
     expect(result.status).toBe("完結");
   });
 
+  it("連載中ステータスを正しく取得する", async () => {
+    mockFetch.mockReturnValueOnce(
+      makeResponse({ data: { Page: { media: [{ volumes: null, status: "RELEASING" }] } } })
+    );
+    const result = await fetchLatestVolume("ワンピース");
+    expect(result.status).toBe("連載中");
+    expect(result.latestVolume).toBe(0);
+  });
+
   it("結果が空の場合は 0 と空文字を返す", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [] }));
+    mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [] } } }));
     const result = await fetchLatestVolume("不明な漫画");
     expect(result.latestVolume).toBe(0);
     expect(result.status).toBe("");
-  });
-
-  it("limit=1 で呼ぶ", async () => {
-    mockFetch.mockReturnValueOnce(makeResponse({ data: [sampleManga] }));
-    await fetchLatestVolume("テスト");
-    const url = mockFetch.mock.calls[0][0] as string;
-    expect(url).toContain("limit=1");
   });
 
   it("429 で RateLimitError をスローする", async () => {
