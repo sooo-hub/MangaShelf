@@ -38,7 +38,13 @@ export function DetailModal({ manga, onClose, onSave, onDelete }: Props) {
       const r = await fetchLatestVolume(manga.title);
       if (r.latestVolume > 0) setLatestVolume(r.latestVolume);
       if (r.status) setStatus(r.status);
-      setFetchMsg(r.latestVolume > 0 ? `✅ 最新${r.latestVolume}巻 / ${r.status}` : "⚠️ 取得できませんでした");
+      if (r.latestVolume > 0) {
+        setFetchMsg(`✅ 最新${r.latestVolume}巻 / ${r.status}`);
+      } else if (r.status) {
+        setFetchMsg(`✅ ${r.status}（巻数はAniListに未登録 - 手動で入力してください）`);
+      } else {
+        setFetchMsg("⚠️ 取得できませんでした");
+      }
     } catch (e) {
       setFetchMsg("❌ " + (e instanceof Error ? e.message : "エラー"));
     }
