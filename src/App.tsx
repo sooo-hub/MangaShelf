@@ -7,6 +7,8 @@ import { MangaCard } from "./components/MangaCard";
 import { SeriesGroup } from "./components/SeriesGroup";
 import { AddModal } from "./components/AddModal";
 import { DetailModal } from "./components/DetailModal";
+import { BulkUpdateResultModal } from "./components/BulkUpdateResultModal";
+import type { UpdatedItem } from "./components/BulkUpdateResultModal";
 
 type Tab = "own" | "wish";
 
@@ -48,6 +50,7 @@ export default function App() {
   const [detail, setDetail] = useState<Manga | null>(null);
   const [bulkUpdating, setBulkUpdating] = useState(false);
   const [bulkStatus, setBulkStatus] = useState("");
+  const [bulkResult, setBulkResult] = useState<UpdatedItem[] | null>(null);
 
   const handleBulkUpdate = async () => {
     const targets = list.filter((m) => m.status !== "完結");
@@ -57,19 +60,18 @@ export default function App() {
       return;
     }
     setBulkUpdating(true);
-    let updated = 0;
+    const changedItems: UpdatedItem[] = [];
     for (let i = 0; i < targets.length; i++) {
       const m = targets[i];
       setBulkStatus(`(${i + 1}/${targets.length}) ${m.title}...`);
       try {
         const r = await fetchLatestVolume(m.title);
+        const newVolume = r.latestVolume > 0 ? r.latestVolume : m.latestVolume;
         if (r.latestVolume > 0 || r.status) {
-          await updateMangaVolume(
-            m.id,
-            r.latestVolume > 0 ? r.latestVolume : m.latestVolume,
-            r.status || m.status
-          );
-          updated++;
+          await updateMangaVolume(m.id, newVolume, r.status || m.status);
+          if (r.latestVolume > 0 && r.latestVolume !== m.latestVolume) {
+            changedItems.push({ title: m.title, oldVolume: m.latestVolume, newVolume: r.latestVolume });
+          }
         }
         if (i < targets.length - 1) await new Promise((r) => setTimeout(r, 1200));
       } catch (e) {
@@ -79,9 +81,14 @@ export default function App() {
         }
       }
     }
-    setBulkStatus(`✅ ${updated}件を更新しました`);
     setBulkUpdating(false);
-    setTimeout(() => setBulkStatus(""), 3000);
+    setBulkStatus("");
+    if (changedItems.length > 0) {
+      setBulkResult(changedItems);
+    } else {
+      setBulkStatus("✅ 更新なし（全て最新）");
+      setTimeout(() => setBulkStatus(""), 3000);
+    }
   };
 
   const handleSave = async (updated: Manga) => {
@@ -272,6 +279,12 @@ export default function App() {
           onClose={() => setDetail(null)}
           onSave={handleSave}
           onDelete={handleDelete}
+        />
+      )}
+      {bulkResult && (
+        <BulkUpdateResultModal
+          items={bulkResult}
+          onClose={() => setBulkResult(null)}
         />
       )}
     </div>
