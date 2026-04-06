@@ -4,12 +4,30 @@ import { searchManga, fetchLatestVolume, RateLimitError, ANILIST_URL } from "../
 const mockFetch = vi.fn();
 vi.stubGlobal("fetch", mockFetch);
 
+// 環境変数のモック
+vi.stubGlobal("import.meta", {
+  env: {
+    VITE_RAKUTEN_APP_ID: "test-app-id",
+    VITE_RAKUTEN_ACCESS_KEY: "test-access-key",
+  },
+});
+
 function makeResponse(body: unknown, status = 200) {
   return Promise.resolve({
     ok: status >= 200 && status < 300,
     status,
     json: () => Promise.resolve(body),
   } as Response);
+}
+
+// 楽天APIのレスポンス形式
+function makeRakutenResponse(titles: string[], status = 200) {
+  return makeResponse(
+    {
+      Items: titles.map((title) => ({ Item: { title, salesDate: "2024年01月01日" } })),
+    },
+    status
+  );
 }
 
 const sampleMedia = {
@@ -128,12 +146,39 @@ describe("searchManga", () => {
   });
 });
 
-// ── fetchLatestVolume ──────────────────────────────────────────
+// ── fetchLatestVolume (楽天API) ──────────────────────────────────────────
 
 describe("fetchLatestVolume", () => {
   beforeEach(() => { mockFetch.mockReset(); });
 
-  it("最新刊・完結ステータスを正しく取得する", async () => {
+  it("楽天APIから最新巻数を取得する", async () => {
+    mockFetch.mockReturnValueOnce(
+      makeRakutenResponse(["鬼滅の刃 23", "鬼滅の刃 22", "鬼滅の刃 21"])
+    );
+    const result = await fetchLatestVolume("鬼滅の刃");
+    expect(result.latestVolume).toBe(23);
+  });
+
+  it("最大巻数を正しく返す", async () => {
+    mockFetch.mockReturnValueOnce(
+      makeRakutenResponse(["ONE PIECE 114", "ONE PIECE 113", "ONE PIECE 112"])
+    );
+    const result = await fetchLatestVolume("ONE PIECE");
+    expect(result.latestVolume).toBe(114);
+  });
+
+  it("タイトルに一致しない結果を除外する", async () => {
+    mockFetch.mockReturnValueOnce(
+      makeRakutenResponse(["鬼滅の刃 23", "鬼滅の刃はドグラ・マグラ 1", "鬼滅の刃 22"])
+    );
+    const result = await fetchLatestVolume("鬼滅の刃");
+    expect(result.latestVolume).toBe(23);
+  });
+
+  it("楽天で見つからない場合はAniListにフォールバック", async () => {
+    // 楽天: 一致なし
+    mockFetch.mockReturnValueOnce(makeRakutenResponse([]));
+    // AniList フォールバック
     mockFetch.mockReturnValueOnce(
       makeResponse({ data: { Page: { media: [{ volumes: 23, status: "FINISHED" }] } } })
     );
@@ -142,7 +187,8 @@ describe("fetchLatestVolume", () => {
     expect(result.status).toBe("完結");
   });
 
-  it("連載中ステータスを正しく取得する", async () => {
+  it("AniListフォールバックで連載中を返す", async () => {
+    mockFetch.mockReturnValueOnce(makeRakutenResponse([]));
     mockFetch.mockReturnValueOnce(
       makeResponse({ data: { Page: { media: [{ volumes: null, status: "RELEASING" }] } } })
     );
@@ -151,7 +197,8 @@ describe("fetchLatestVolume", () => {
     expect(result.latestVolume).toBe(0);
   });
 
-  it("結果が空の場合は 0 と空文字を返す", async () => {
+  it("楽天・AniList両方で見つからない場合は 0 と空文字を返す", async () => {
+    mockFetch.mockReturnValueOnce(makeRakutenResponse([]));
     mockFetch.mockReturnValueOnce(makeResponse({ data: { Page: { media: [] } } }));
     const result = await fetchLatestVolume("不明な漫画");
     expect(result.latestVolume).toBe(0);
