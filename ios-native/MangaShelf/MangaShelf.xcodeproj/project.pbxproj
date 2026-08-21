@@ -7,27 +7,37 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		1596696E1F644AB1D6FA0522 /* AuthService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 912334B9B206E02F21B8C2D8 /* AuthService.swift */; };
+		133945320AC70EFF58A9D102 /* UserBadgesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 773E7F7FDE0B46C906658FBE /* UserBadgesView.swift */; };
 		163EECCFEF15E29E839BE24B /* MangaDetailSyncLogic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 55C25A54299F28AE4AC67423 /* MangaDetailSyncLogic.swift */; };
-		18481F9D76DF98502773C582 /* FirebaseAuth in Frameworks */ = {isa = PBXBuildFile; productRef = A0D0FB00D80FFE87D33FA86D /* FirebaseAuth */; };
+		18481F9D76DF98502773C582 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A9947FD777FE5E2672B8160A /* FirebaseFirestore */; };
 		1C6686FBB4EB57DAB8C2C338 /* MangaDetailSyncLogicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4903A3DC0284C0ADFD47710E /* MangaDetailSyncLogicTests.swift */; };
+		1F0FDC063E01FC967D578CE3 /* ManualFormView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FFC53DDC6A00553B29F0F588 /* ManualFormView.swift */; };
 		213A717C8CA9230E69070649 /* InputValidationTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 981F3350A5ED0FD9AFE291F2 /* InputValidationTests.swift */; };
-		47D19338B8B7C8BA57C05696 /* ShelfListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B5C54065A60A05C09269586 /* ShelfListView.swift */; };
+		30E96966B56451C60ACE1263 /* Secrets.plist in Resources */ = {isa = PBXBuildFile; fileRef = B9D1B6FA5394AAA6E6EC237B /* Secrets.plist */; };
+		35D9E906D8669A058F1E22D2 /* AniListGenreMappingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = EEF20DE28ABE92B7F1DDC071 /* AniListGenreMappingTests.swift */; };
+		4029CB90BDD306627FE9836E /* SeriesGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D12521030710635FC56EC5AB /* SeriesGroupView.swift */; };
 		48C24EA038DFDE544CB3B8CD /* Manga.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6913F8DE5C03EAA00B1A0470 /* Manga.swift */; };
 		4AC8D79A294BF11427EFCF52 /* MangaDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 476AB463AB45E317418FF6B1 /* MangaDetailView.swift */; };
 		4F38CFCD80FFBDFE33E149FA /* MangaShelfApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B25750A38F9FB207193F503F /* MangaShelfApp.swift */; };
-		60F38E21D25A0BEB5732A179 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 90D93A256E3F0D1ACF744836 /* FirebaseCore */; };
 		619816C9BE0600594A0A7614 /* InputValidation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E903C967EE78B54685841E1 /* InputValidation.swift */; };
-		61A591BD1D8013E874433D8A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0192556E7BFC23976E4505DD /* LoginView.swift */; };
-		6BA3824258317E6817D7F7AE /* ShelfRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17FE1A7824649168E5535F4 /* ShelfRepository.swift */; };
+		657412A155E61727F0155A9E /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4E234ADB83ADF60CAAC6D126 /* Theme.swift */; };
+		68E515D65B18E15575B76633 /* AniListService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0383E12EEB9B5D6CDEEFD45F /* AniListService.swift */; };
 		6D3223E0FC9E91374B476249 /* AddMangaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C69AA2EB792EA84F39D236 /* AddMangaView.swift */; };
 		716DE4E391BF827AC8B290C5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 079855B4C32808BE7799009A /* GoogleService-Info.plist */; };
-		7AF3DC864C73A6B524478684 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A9947FD777FE5E2672B8160A /* FirebaseFirestore */; };
-		952CE971895E65B49810431B /* MangaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EF1DAA067E17D21867A83F /* MangaListView.swift */; };
-		AEAD150EFDDD41AC744ED01A /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071B2190C9324EE50AF7D2CA /* Shelf.swift */; };
+		76AB13AA1FDDA2204C7E17B2 /* RakutenSecrets.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7F642E79B57314F2D975BA5F /* RakutenSecrets.swift */; };
+		7AF3DC864C73A6B524478684 /* FirebaseCore in Frameworks */ = {isa = PBXBuildFile; productRef = 90D93A256E3F0D1ACF744836 /* FirebaseCore */; };
+		992667A7F49BF2CC8DCCEE30 /* RakutenBooksAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1524ECD63A8F52F9089C3362 /* RakutenBooksAPI.swift */; };
+		B90E426F0621D45B98723057 /* MangaCardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4FF590F877001BB85F560E4E /* MangaCardView.swift */; };
 		BB8CC8440B0A55BF395C1E30 /* FirebaseBootstrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 45EF399B3AC6BE61F32C9195 /* FirebaseBootstrap.swift */; };
+		C33F0E7EDFAD6BF95257DCC6 /* RakutenVolumeExtractionTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 53F8B7B236999E4B3C4820D1 /* RakutenVolumeExtractionTests.swift */; };
+		C5D804B7363D6C7593B2AE94 /* ShelfRowBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B592DD2EA6519A845E49AB5 /* ShelfRowBuilder.swift */; };
+		CB2AD3A6D5C743551B07811B /* CandidateRowView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1822CDA5A8860D116D015C8B /* CandidateRowView.swift */; };
+		CC9892CB2BD3DA12A193AEC2 /* VolumeGridView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5052CE1C524872C7C1D0D6BE /* VolumeGridView.swift */; };
+		DDCC47A01FB88D510E31B7C6 /* BulkUpdateResultView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F9174A49D3EB9577958720FC /* BulkUpdateResultView.swift */; };
 		E92FCD20E487B0C5DD5C0A81 /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9802FB0F6E1CECCCD0055FF1 /* RootView.swift */; };
+		E9311718B3C40AE34E77EC30 /* MangaShelfView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A90FFB6C1932BD9CAED5466 /* MangaShelfView.swift */; };
 		F6968BD2D81C6BA57DB43AF5 /* MangaRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80B8D14E9C55B58767ED032B /* MangaRepository.swift */; };
+		F90EF46FE6C38E37072F1735 /* ShelfRowBuilderTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228DD1A32CB242D9DFE0532F /* ShelfRowBuilderTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,25 +52,36 @@
 
 /* Begin PBXFileReference section */
 		00F94F3C081866F0472324B4 /* MangaShelfTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MangaShelfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		0192556E7BFC23976E4505DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
-		071B2190C9324EE50AF7D2CA /* Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shelf.swift; sourceTree = "<group>"; };
+		0383E12EEB9B5D6CDEEFD45F /* AniListService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AniListService.swift; sourceTree = "<group>"; };
 		079855B4C32808BE7799009A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		1524ECD63A8F52F9089C3362 /* RakutenBooksAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RakutenBooksAPI.swift; sourceTree = "<group>"; };
+		1822CDA5A8860D116D015C8B /* CandidateRowView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CandidateRowView.swift; sourceTree = "<group>"; };
+		228DD1A32CB242D9DFE0532F /* ShelfRowBuilderTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfRowBuilderTests.swift; sourceTree = "<group>"; };
+		2B592DD2EA6519A845E49AB5 /* ShelfRowBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfRowBuilder.swift; sourceTree = "<group>"; };
 		45EF399B3AC6BE61F32C9195 /* FirebaseBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseBootstrap.swift; sourceTree = "<group>"; };
 		476AB463AB45E317418FF6B1 /* MangaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailView.swift; sourceTree = "<group>"; };
 		4903A3DC0284C0ADFD47710E /* MangaDetailSyncLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailSyncLogicTests.swift; sourceTree = "<group>"; };
+		4E234ADB83ADF60CAAC6D126 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		4FF590F877001BB85F560E4E /* MangaCardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaCardView.swift; sourceTree = "<group>"; };
+		5052CE1C524872C7C1D0D6BE /* VolumeGridView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VolumeGridView.swift; sourceTree = "<group>"; };
+		53F8B7B236999E4B3C4820D1 /* RakutenVolumeExtractionTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RakutenVolumeExtractionTests.swift; sourceTree = "<group>"; };
 		55C25A54299F28AE4AC67423 /* MangaDetailSyncLogic.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailSyncLogic.swift; sourceTree = "<group>"; };
 		58C69AA2EB792EA84F39D236 /* AddMangaView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddMangaView.swift; sourceTree = "<group>"; };
-		64EF1DAA067E17D21867A83F /* MangaListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaListView.swift; sourceTree = "<group>"; };
 		6913F8DE5C03EAA00B1A0470 /* Manga.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Manga.swift; sourceTree = "<group>"; };
-		7B5C54065A60A05C09269586 /* ShelfListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfListView.swift; sourceTree = "<group>"; };
+		773E7F7FDE0B46C906658FBE /* UserBadgesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserBadgesView.swift; sourceTree = "<group>"; };
+		7F642E79B57314F2D975BA5F /* RakutenSecrets.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RakutenSecrets.swift; sourceTree = "<group>"; };
 		80B8D14E9C55B58767ED032B /* MangaRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaRepository.swift; sourceTree = "<group>"; };
 		8E903C967EE78B54685841E1 /* InputValidation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputValidation.swift; sourceTree = "<group>"; };
-		912334B9B206E02F21B8C2D8 /* AuthService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthService.swift; sourceTree = "<group>"; };
 		9802FB0F6E1CECCCD0055FF1 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
 		981F3350A5ED0FD9AFE291F2 /* InputValidationTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InputValidationTests.swift; sourceTree = "<group>"; };
-		B17FE1A7824649168E5535F4 /* ShelfRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShelfRepository.swift; sourceTree = "<group>"; };
+		9A90FFB6C1932BD9CAED5466 /* MangaShelfView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaShelfView.swift; sourceTree = "<group>"; };
 		B25750A38F9FB207193F503F /* MangaShelfApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaShelfApp.swift; sourceTree = "<group>"; };
+		B9D1B6FA5394AAA6E6EC237B /* Secrets.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Secrets.plist; sourceTree = "<group>"; };
+		D12521030710635FC56EC5AB /* SeriesGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SeriesGroupView.swift; sourceTree = "<group>"; };
+		EEF20DE28ABE92B7F1DDC071 /* AniListGenreMappingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AniListGenreMappingTests.swift; sourceTree = "<group>"; };
 		F6C9990A325CC13F3DDD0D15 /* MangaShelf.app */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.application; path = MangaShelf.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F9174A49D3EB9577958720FC /* BulkUpdateResultView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BulkUpdateResultView.swift; sourceTree = "<group>"; };
+		FFC53DDC6A00553B29F0F588 /* ManualFormView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ManualFormView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -68,9 +89,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				18481F9D76DF98502773C582 /* FirebaseAuth in Frameworks */,
-				7AF3DC864C73A6B524478684 /* FirebaseFirestore in Frameworks */,
-				60F38E21D25A0BEB5732A179 /* FirebaseCore in Frameworks */,
+				18481F9D76DF98502773C582 /* FirebaseFirestore in Frameworks */,
+				7AF3DC864C73A6B524478684 /* FirebaseCore in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -80,10 +100,26 @@
 		08CB80D310EF997DEA8AE716 /* MangaShelfTests */ = {
 			isa = PBXGroup;
 			children = (
+				EEF20DE28ABE92B7F1DDC071 /* AniListGenreMappingTests.swift */,
 				981F3350A5ED0FD9AFE291F2 /* InputValidationTests.swift */,
 				4903A3DC0284C0ADFD47710E /* MangaDetailSyncLogicTests.swift */,
+				53F8B7B236999E4B3C4820D1 /* RakutenVolumeExtractionTests.swift */,
+				228DD1A32CB242D9DFE0532F /* ShelfRowBuilderTests.swift */,
 			);
 			path = MangaShelfTests;
+			sourceTree = "<group>";
+		};
+		29D3794A306999B0E65163A0 /* Components */ = {
+			isa = PBXGroup;
+			children = (
+				1822CDA5A8860D116D015C8B /* CandidateRowView.swift */,
+				4FF590F877001BB85F560E4E /* MangaCardView.swift */,
+				FFC53DDC6A00553B29F0F588 /* ManualFormView.swift */,
+				D12521030710635FC56EC5AB /* SeriesGroupView.swift */,
+				773E7F7FDE0B46C906658FBE /* UserBadgesView.swift */,
+				5052CE1C524872C7C1D0D6BE /* VolumeGridView.swift */,
+			);
+			path = Components;
 			sourceTree = "<group>";
 		};
 		58F317175890775DED584FE3 = {
@@ -100,6 +136,7 @@
 			isa = PBXGroup;
 			children = (
 				079855B4C32808BE7799009A /* GoogleService-Info.plist */,
+				B9D1B6FA5394AAA6E6EC237B /* Secrets.plist */,
 			);
 			path = Resources;
 			sourceTree = "<group>";
@@ -117,7 +154,6 @@
 			isa = PBXGroup;
 			children = (
 				6913F8DE5C03EAA00B1A0470 /* Manga.swift */,
-				071B2190C9324EE50AF7D2CA /* Shelf.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -125,12 +161,14 @@
 		A0DC4D4B50A2864AB39ABB3C /* Services */ = {
 			isa = PBXGroup;
 			children = (
-				912334B9B206E02F21B8C2D8 /* AuthService.swift */,
+				0383E12EEB9B5D6CDEEFD45F /* AniListService.swift */,
 				45EF399B3AC6BE61F32C9195 /* FirebaseBootstrap.swift */,
 				8E903C967EE78B54685841E1 /* InputValidation.swift */,
 				55C25A54299F28AE4AC67423 /* MangaDetailSyncLogic.swift */,
 				80B8D14E9C55B58767ED032B /* MangaRepository.swift */,
-				B17FE1A7824649168E5535F4 /* ShelfRepository.swift */,
+				1524ECD63A8F52F9089C3362 /* RakutenBooksAPI.swift */,
+				7F642E79B57314F2D975BA5F /* RakutenSecrets.swift */,
+				2B592DD2EA6519A845E49AB5 /* ShelfRowBuilder.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -139,11 +177,12 @@
 			isa = PBXGroup;
 			children = (
 				58C69AA2EB792EA84F39D236 /* AddMangaView.swift */,
-				0192556E7BFC23976E4505DD /* LoginView.swift */,
+				F9174A49D3EB9577958720FC /* BulkUpdateResultView.swift */,
 				476AB463AB45E317418FF6B1 /* MangaDetailView.swift */,
-				64EF1DAA067E17D21867A83F /* MangaListView.swift */,
+				9A90FFB6C1932BD9CAED5466 /* MangaShelfView.swift */,
 				9802FB0F6E1CECCCD0055FF1 /* RootView.swift */,
-				7B5C54065A60A05C09269586 /* ShelfListView.swift */,
+				4E234ADB83ADF60CAAC6D126 /* Theme.swift */,
+				29D3794A306999B0E65163A0 /* Components */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -210,7 +249,6 @@
 			);
 			name = MangaShelf;
 			packageProductDependencies = (
-				A0D0FB00D80FFE87D33FA86D /* FirebaseAuth */,
 				A9947FD777FE5E2672B8160A /* FirebaseFirestore */,
 				90D93A256E3F0D1ACF744836 /* FirebaseCore */,
 			);
@@ -265,6 +303,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				716DE4E391BF827AC8B290C5 /* GoogleService-Info.plist in Resources */,
+				30E96966B56451C60ACE1263 /* Secrets.plist in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -276,20 +315,27 @@
 			buildActionMask = 2147483647;
 			files = (
 				6D3223E0FC9E91374B476249 /* AddMangaView.swift in Sources */,
-				1596696E1F644AB1D6FA0522 /* AuthService.swift in Sources */,
+				68E515D65B18E15575B76633 /* AniListService.swift in Sources */,
+				DDCC47A01FB88D510E31B7C6 /* BulkUpdateResultView.swift in Sources */,
+				CB2AD3A6D5C743551B07811B /* CandidateRowView.swift in Sources */,
 				BB8CC8440B0A55BF395C1E30 /* FirebaseBootstrap.swift in Sources */,
 				619816C9BE0600594A0A7614 /* InputValidation.swift in Sources */,
-				61A591BD1D8013E874433D8A /* LoginView.swift in Sources */,
 				48C24EA038DFDE544CB3B8CD /* Manga.swift in Sources */,
+				B90E426F0621D45B98723057 /* MangaCardView.swift in Sources */,
 				163EECCFEF15E29E839BE24B /* MangaDetailSyncLogic.swift in Sources */,
 				4AC8D79A294BF11427EFCF52 /* MangaDetailView.swift in Sources */,
-				952CE971895E65B49810431B /* MangaListView.swift in Sources */,
 				F6968BD2D81C6BA57DB43AF5 /* MangaRepository.swift in Sources */,
 				4F38CFCD80FFBDFE33E149FA /* MangaShelfApp.swift in Sources */,
+				E9311718B3C40AE34E77EC30 /* MangaShelfView.swift in Sources */,
+				1F0FDC063E01FC967D578CE3 /* ManualFormView.swift in Sources */,
+				992667A7F49BF2CC8DCCEE30 /* RakutenBooksAPI.swift in Sources */,
+				76AB13AA1FDDA2204C7E17B2 /* RakutenSecrets.swift in Sources */,
 				E92FCD20E487B0C5DD5C0A81 /* RootView.swift in Sources */,
-				AEAD150EFDDD41AC744ED01A /* Shelf.swift in Sources */,
-				47D19338B8B7C8BA57C05696 /* ShelfListView.swift in Sources */,
-				6BA3824258317E6817D7F7AE /* ShelfRepository.swift in Sources */,
+				4029CB90BDD306627FE9836E /* SeriesGroupView.swift in Sources */,
+				C5D804B7363D6C7593B2AE94 /* ShelfRowBuilder.swift in Sources */,
+				657412A155E61727F0155A9E /* Theme.swift in Sources */,
+				133945320AC70EFF58A9D102 /* UserBadgesView.swift in Sources */,
+				CC9892CB2BD3DA12A193AEC2 /* VolumeGridView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -297,8 +343,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				35D9E906D8669A058F1E22D2 /* AniListGenreMappingTests.swift in Sources */,
 				213A717C8CA9230E69070649 /* InputValidationTests.swift in Sources */,
 				1C6686FBB4EB57DAB8C2C338 /* MangaDetailSyncLogicTests.swift in Sources */,
+				C33F0E7EDFAD6BF95257DCC6 /* RakutenVolumeExtractionTests.swift in Sources */,
+				F90EF46FE6C38E37072F1735 /* ShelfRowBuilderTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -566,11 +615,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 8D189C55C0AD0EC51B4EE24F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
 			productName = FirebaseCore;
-		};
-		A0D0FB00D80FFE87D33FA86D /* FirebaseAuth */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 8D189C55C0AD0EC51B4EE24F /* XCRemoteSwiftPackageReference "firebase-ios-sdk" */;
-			productName = FirebaseAuth;
 		};
 		A9947FD777FE5E2672B8160A /* FirebaseFirestore */ = {
 			isa = XCSwiftPackageProductDependency;

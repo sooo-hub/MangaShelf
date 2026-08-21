@@ -1,19 +1,13 @@
 import SwiftUI
 
-/// ログイン状態に応じてログイン画面 / 本棚一覧画面を出し分けるルート。
+/// アプリのルート。認証は無く、起動後すぐに本棚一覧 (`MangaShelfView`) を表示する。
 struct RootView: View {
-    @StateObject private var authService = AuthService()
+    @StateObject private var repository = MangaRepository()
 
     var body: some View {
-        Group {
-            if authService.isSignedIn {
-                ShelfListView()
-                    .environmentObject(authService)
-            } else {
-                LoginView()
-                    .environmentObject(authService)
-            }
-        }
+        MangaShelfView()
+            .environmentObject(repository)
+            .onAppear { repository.startListening() }
     }
 }
 

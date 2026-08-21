@@ -41,8 +41,6 @@ targets:
         DEVELOPMENT_TEAM: L47Y6TXLJ3
     dependencies:
       - package: Firebase
-        product: FirebaseAuth
-      - package: Firebase
         product: FirebaseFirestore
       - package: Firebase
         product: FirebaseCore
