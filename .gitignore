@@ -1,0 +1,25 @@
+# macOS
+.DS_Store
+
+# Node / Expo (将来 React Native 側を追加した場合用)
+node_modules/
+.expo/
+.expo-shared/
+dist/
+web-build/
+
+# Firebase / 秘匿情報
+.env
+.env.local
+**/GoogleService-Info.plist
+!ios-native/GoogleService-Info.plist.sample
+firebase-debug.log
+firestore-debug.log
+
+# Xcode / iOS (ios-native/)
+ios-native/**/xcuserdata/
+ios-native/**/*.xcuserstate
+ios-native/**/DerivedData/
+ios-native/**/.build/
+ios-native/**/.swiftpm/
+ios-native/**/Generated/

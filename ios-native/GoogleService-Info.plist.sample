@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  これは実際の GoogleService-Info.plist の「テンプレート」です。
+  本物のFirebaseプロジェクトを作成したら、Firebaseコンソール(プロジェクト設定 > 全般 > マイアプリ > iOSアプリ)から
+  本物の GoogleService-Info.plist をダウンロードし、以下の場所に配置してください:
+
+    ios-native/MangaShelf/Resources/GoogleService-Info.plist
+
+  このファイル (GoogleService-Info.plist.sample) はあくまで参考用のテンプレートで、
+  .gitignore により実ファイル (Resources/GoogleService-Info.plist) はコミット対象外になっています。
+-->
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>000000000000-dummydummydummydummydummydummydumm.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.000000000000-dummydummydummydummydummydummydumm</string>
+	<key>API_KEY</key>
+	<string>AIzaSyDUMMY-DUMMY-DUMMY-DUMMY-DUMMY-DUM</string>
+	<key>GCM_SENDER_ID</key>
+	<string>000000000000</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.mangashelf.app.MangaShelf</string>
+	<key>PROJECT_ID</key>
+	<string>mangashelf-dummy</string>
+	<key>STORAGE_BUCKET</key>
+	<string>mangashelf-dummy.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false/>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false/>
+	<key>IS_APPINVITE_ENABLED</key>
+	<false/>
+	<key>IS_GCM_ENABLED</key>
+	<true/>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true/>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:000000000000:ios:0000000000000000000000</string>
+	<key>DATABASE_URL</key>
+	<string>https://mangashelf-dummy.firebaseio.com</string>
+</dict>
+</plist>
