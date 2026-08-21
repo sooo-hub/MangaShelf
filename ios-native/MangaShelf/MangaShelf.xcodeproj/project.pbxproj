@@ -21,6 +21,7 @@
 		61A591BD1D8013E874433D8A /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0192556E7BFC23976E4505DD /* LoginView.swift */; };
 		6BA3824258317E6817D7F7AE /* ShelfRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = B17FE1A7824649168E5535F4 /* ShelfRepository.swift */; };
 		6D3223E0FC9E91374B476249 /* AddMangaView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C69AA2EB792EA84F39D236 /* AddMangaView.swift */; };
+		716DE4E391BF827AC8B290C5 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = 079855B4C32808BE7799009A /* GoogleService-Info.plist */; };
 		7AF3DC864C73A6B524478684 /* FirebaseFirestore in Frameworks */ = {isa = PBXBuildFile; productRef = A9947FD777FE5E2672B8160A /* FirebaseFirestore */; };
 		952CE971895E65B49810431B /* MangaListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64EF1DAA067E17D21867A83F /* MangaListView.swift */; };
 		AEAD150EFDDD41AC744ED01A /* Shelf.swift in Sources */ = {isa = PBXBuildFile; fileRef = 071B2190C9324EE50AF7D2CA /* Shelf.swift */; };
@@ -43,6 +44,7 @@
 		00F94F3C081866F0472324B4 /* MangaShelfTests.xctest */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = wrapper.cfbundle; path = MangaShelfTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		0192556E7BFC23976E4505DD /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		071B2190C9324EE50AF7D2CA /* Shelf.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Shelf.swift; sourceTree = "<group>"; };
+		079855B4C32808BE7799009A /* GoogleService-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
 		45EF399B3AC6BE61F32C9195 /* FirebaseBootstrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FirebaseBootstrap.swift; sourceTree = "<group>"; };
 		476AB463AB45E317418FF6B1 /* MangaDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailView.swift; sourceTree = "<group>"; };
 		4903A3DC0284C0ADFD47710E /* MangaDetailSyncLogicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MangaDetailSyncLogicTests.swift; sourceTree = "<group>"; };
@@ -87,10 +89,19 @@
 		58F317175890775DED584FE3 = {
 			isa = PBXGroup;
 			children = (
+				5A8C8E8F3D53996305A39632 /* Resources */,
 				C439CC7659E20718AD6BC0C0 /* Sources */,
 				E4D565CC6C679A51405725DC /* Tests */,
 				6748428A60CC40720DE9364B /* Products */,
 			);
+			sourceTree = "<group>";
+		};
+		5A8C8E8F3D53996305A39632 /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				079855B4C32808BE7799009A /* GoogleService-Info.plist */,
+			);
+			path = Resources;
 			sourceTree = "<group>";
 		};
 		6748428A60CC40720DE9364B /* Products */ = {
@@ -190,6 +201,7 @@
 			buildConfigurationList = 92A7A393D6FF666794754A30 /* Build configuration list for PBXNativeTarget "MangaShelf" */;
 			buildPhases = (
 				86B50632C18B906A74B5F59F /* Sources */,
+				67895EC22E32B30D7C4509CE /* Resources */,
 				7DA193794BAC59DE84922A46 /* Frameworks */,
 			);
 			buildRules = (
@@ -245,6 +257,17 @@
 			);
 		};
 /* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		67895EC22E32B30D7C4509CE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				716DE4E391BF827AC8B290C5 /* GoogleService-Info.plist in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		86B50632C18B906A74B5F59F /* Sources */ = {
