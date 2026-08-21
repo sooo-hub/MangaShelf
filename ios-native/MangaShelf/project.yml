@@ -38,6 +38,7 @@ targets:
         CURRENT_PROJECT_VERSION: "1"
         ASSETCATALOG_COMPILER_APPICON_NAME: ""
         CODE_SIGN_STYLE: Automatic
+        DEVELOPMENT_TEAM: L47Y6TXLJ3
     dependencies:
       - package: Firebase
         product: FirebaseAuth
