@@ -42,7 +42,8 @@ final class ShelfRepository: ObservableObject {
             "createdAt": Timestamp(date: Date())
         ]
         db.collection("shelves").addDocument(data: data) { [weak self] error in
-            if let error {
+            guard let error else { return }
+            Task { @MainActor in
                 self?.errorMessage = error.localizedDescription
             }
         }
@@ -51,7 +52,8 @@ final class ShelfRepository: ObservableObject {
     func deleteShelf(_ shelf: Shelf) {
         guard let db else { return }
         db.collection("shelves").document(shelf.id).delete { [weak self] error in
-            if let error {
+            guard let error else { return }
+            Task { @MainActor in
                 self?.errorMessage = error.localizedDescription
             }
         }

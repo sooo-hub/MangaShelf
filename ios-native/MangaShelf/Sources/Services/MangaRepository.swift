@@ -57,7 +57,8 @@ final class MangaRepository: ObservableObject {
             data["totalVolumes"] = totalVolumes
         }
         mangaCollection.addDocument(data: data) { [weak self] error in
-            if let error {
+            guard let error else { return }
+            Task { @MainActor in
                 self?.errorMessage = error.localizedDescription
             }
         }
@@ -73,7 +74,8 @@ final class MangaRepository: ObservableObject {
         ]
         data["totalVolumes"] = manga.totalVolumes ?? FieldValue.delete()
         mangaCollection.document(manga.id).setData(data, merge: true) { [weak self] error in
-            if let error {
+            guard let error else { return }
+            Task { @MainActor in
                 self?.errorMessage = error.localizedDescription
             }
         }
@@ -82,7 +84,8 @@ final class MangaRepository: ObservableObject {
     func deleteManga(_ manga: Manga) {
         guard let mangaCollection else { return }
         mangaCollection.document(manga.id).delete { [weak self] error in
-            if let error {
+            guard let error else { return }
+            Task { @MainActor in
                 self?.errorMessage = error.localizedDescription
             }
         }
