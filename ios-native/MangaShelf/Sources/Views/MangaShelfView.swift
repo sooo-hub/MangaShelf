@@ -137,6 +137,7 @@ struct MangaShelfView: View {
                             .font(.system(size: 10, weight: .bold))
                             .tracking(1.5)
                             .foregroundColor(Palette.amber400)
+                            .lineLimit(1)
                             .onLongPressGesture(minimumDuration: 2.0) {
                                 passcodeInput = ""
                                 showPasscodePrompt = true
@@ -145,27 +146,29 @@ struct MangaShelfView: View {
                             Text("サーバー同期中")
                                 .font(.system(size: 8, weight: .bold))
                                 .foregroundColor(Palette.green400)
+                                .lineLimit(1)
                         }
                     }
                     HStack(spacing: 6) {
                         Image(systemName: "books.vertical.fill")
-                        Text("本棚")
+                        Text("本棚").lineLimit(1)
                     }
                     .font(.system(size: 20, weight: .heavy))
                     .foregroundColor(.white)
                 }
-                Spacer()
+                Spacer(minLength: 8)
                 HStack(spacing: 8) {
                     Button {
                         Task { await performBulkUpdate() }
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "arrow.clockwise")
-                            if !bulkUpdating { Text("一括更新") }
+                            if !bulkUpdating { Text("一括更新").lineLimit(1) }
                         }
+                        .fixedSize()
                         .font(.system(size: 12, weight: .bold))
                         .foregroundColor(bulkUpdating ? Palette.slate500 : Palette.slate400)
-                        .padding(.horizontal, 14)
+                        .padding(.horizontal, 12)
                         .padding(.vertical, 8)
                         .background(bulkUpdating ? Palette.slate700 : Color(hex: "0f172a"))
                         .clipShape(Capsule())
@@ -191,16 +194,19 @@ struct MangaShelfView: View {
                     } label: {
                         HStack(spacing: 4) {
                             Image(systemName: "plus")
-                            Text("追加")
+                            Text("追加").lineLimit(1)
                         }
+                        .fixedSize()
                         .font(.system(size: 14, weight: .bold))
                         .foregroundColor(.black)
-                        .padding(.horizontal, 18)
+                        .padding(.horizontal, 16)
                         .padding(.vertical, 8)
                         .background(Palette.amber400)
                         .clipShape(Capsule())
                     }
                 }
+                .fixedSize()
+                .layoutPriority(1)
             }
 
             if !bulkStatus.isEmpty {

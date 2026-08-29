@@ -13,6 +13,7 @@ struct AddMangaView: View {
     @State private var candidates: [MangaCandidate] = []
     @State private var errorMessage = ""
     @State private var showManual = false
+    @FocusState private var searchFieldFocused: Bool
 
     var body: some View {
         NavigationStack {
@@ -95,6 +96,10 @@ struct AddMangaView: View {
                 }
             }
         }
+        .task {
+            try? await Task.sleep(nanoseconds: 350_000_000)
+            searchFieldFocused = true
+        }
     }
 
     private var searchBar: some View {
@@ -108,6 +113,7 @@ struct AddMangaView: View {
                 .overlay(
                     RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.slate200, lineWidth: 1)
                 )
+                .focused($searchFieldFocused)
                 .onSubmit { Task { await doSearch() } }
 
             Button {
