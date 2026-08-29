@@ -2,6 +2,8 @@ import SwiftUI
 
 /// AniList検索結果1件分の行。Web版 `CandidateRow.tsx` に相当。
 struct CandidateRowView: View {
+    @EnvironmentObject private var repository: MangaRepository
+
     let item: MangaCandidate
     let alreadyAdded: Bool
     let onAdd: (MangaType, [UserName]) -> Void
@@ -43,12 +45,12 @@ struct CandidateRowView: View {
             } else {
                 TypeToggleView(type: $type)
 
-                if type == .wish {
+                if type == .wish && repository.mode == .server {
                     WishUserPickerView(selected: $wishUsers)
                         .padding(.top, 10)
                 }
 
-                let disabled = type == .wish && wishUsers.isEmpty
+                let disabled = type == .wish && repository.mode == .server && wishUsers.isEmpty
                 Button {
                     onAdd(type, wishUsers)
                 } label: {
@@ -109,6 +111,7 @@ struct TypeToggleView: View {
 
 /// 「誰が欲しい？」ユーザー選択(複数可)。CandidateRow・ManualForm・詳細画面で共有する。
 struct WishUserPickerView: View {
+    @EnvironmentObject private var userDisplayNames: UserDisplayNames
     @Binding var selected: [UserName]
 
     var body: some View {
@@ -127,7 +130,7 @@ struct WishUserPickerView: View {
                             selected.append(user)
                         }
                     } label: {
-                        Text(user.rawValue)
+                        Text(userDisplayNames.label(for: user))
                             .font(.system(size: 14, weight: .bold))
                             .foregroundColor(sel ? colors.on : Palette.slate400)
                             .frame(maxWidth: .infinity)

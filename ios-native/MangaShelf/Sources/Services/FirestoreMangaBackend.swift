@@ -3,8 +3,10 @@ import FirebaseCore
 import FirebaseFirestore
 import Foundation
 
-/// フラットな `mangaShelf` コレクションへの CRUD + リアルタイム同期(addSnapshotListener)を担当する。
+/// `shelves/{合言葉}/mangaShelf` への CRUD + リアルタイム同期(addSnapshotListener)を担当する。
 /// 隠しオプションから切り替えられる「サーバー同期モード」の実体。
+/// 合言葉をパスに含めることで、Firestoreのセキュリティルール側だけで
+/// 読み書きの両方を保護する(合言葉を知らない第三者は一切アクセスできない)。
 @MainActor
 final class FirestoreMangaBackend: MangaBackend, ObservableObject {
     static let collectionName = "mangaShelf"
@@ -25,7 +27,8 @@ final class FirestoreMangaBackend: MangaBackend, ObservableObject {
     }
 
     private var mangaCollection: CollectionReference? {
-        db?.collection(Self.collectionName)
+        guard let db, let token = PasscodeStore.load() else { return nil }
+        return db.collection("shelves").document(token).collection(Self.collectionName)
     }
 
     func startListening() {

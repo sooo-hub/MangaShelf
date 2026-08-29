@@ -8,23 +8,18 @@ private enum ShelfTab: Hashable {
 private enum WishUserFilter: Hashable {
     case all
     case user(UserName)
-
-    var label: String {
-        switch self {
-        case .all: return "全員"
-        case .user(let u): return u.rawValue
-        }
-    }
 }
 
 /// メイン画面。Web版 `App.tsx` に相当。
 struct MangaShelfView: View {
     @EnvironmentObject private var repository: MangaRepository
+    @EnvironmentObject private var userDisplayNames: UserDisplayNames
 
     @State private var tab: ShelfTab = .own
     @State private var search = ""
     @State private var userFilter: WishUserFilter = .all
     @State private var showAdd = false
+    @State private var showSettings = false
     @State private var detailManga: Manga?
     @State private var bulkUpdating = false
     @State private var bulkStatus = ""
@@ -42,14 +37,21 @@ struct MangaShelfView: View {
         .sheet(isPresented: $showAdd) {
             AddMangaView(existingTitles: repository.mangas.map { $0.title })
                 .environmentObject(repository)
+                .environmentObject(userDisplayNames)
         }
         .sheet(item: $detailManga) { manga in
             MangaDetailView(manga: manga)
                 .environmentObject(repository)
+                .environmentObject(userDisplayNames)
         }
         .sheet(item: $bulkResult) { result in
             BulkUpdateResultView(result: result) { bulkResult = nil }
                 .presentationDetents([.medium, .large])
+        }
+        .sheet(isPresented: $showSettings) {
+            SettingsView()
+                .environmentObject(repository)
+                .environmentObject(userDisplayNames)
         }
         .alert("合言葉", isPresented: $showPasscodePrompt) {
             TextField("合言葉", text: $passcodeInput)
@@ -58,6 +60,8 @@ struct MangaShelfView: View {
                 passcodeInput = ""
                 Task {
                     if await PasscodeGate.verifyStorageModeSwitchPasscode(code) {
+                        PasscodeStore.save(code)
+                        await userDisplayNames.load()
                         showStorageModeSwitch = true
                     }
                 }
@@ -169,6 +173,19 @@ struct MangaShelfView: View {
                     }
                     .disabled(bulkUpdating)
 
+                    if repository.mode == .server {
+                        Button {
+                            showSettings = true
+                        } label: {
+                            Image(systemName: "gearshape.fill")
+                                .font(.system(size: 14, weight: .semibold))
+                                .foregroundColor(Palette.slate400)
+                                .padding(8)
+                                .background(Color(hex: "0f172a"))
+                                .clipShape(Circle())
+                        }
+                    }
+
                     Button {
                         showAdd = true
                     } label: {
@@ -211,7 +228,7 @@ struct MangaShelfView: View {
 
             tabBar
 
-            if tab == .wish {
+            if tab == .wish && repository.mode == .server {
                 userFilterBar
                     .padding(.bottom, 4)
             }
@@ -267,10 +284,16 @@ struct MangaShelfView: View {
         } else {
             colors = (Palette.slate200, Palette.slate800)
         }
+        let label: String
+        if case .user(let u) = filter {
+            label = userDisplayNames.label(for: u)
+        } else {
+            label = "全員"
+        }
         return Button {
             userFilter = filter
         } label: {
-            Text(filter.label)
+            Text(label)
                 .font(.system(size: 12, weight: selected ? .bold : .medium))
                 .foregroundColor(selected ? colors.on : Palette.slate400)
                 .padding(.horizontal, 14)

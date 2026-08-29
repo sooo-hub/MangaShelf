@@ -174,7 +174,9 @@ struct MangaDetailView: View {
 
     private var wishSection: some View {
         VStack(alignment: .leading, spacing: 12) {
-            WishUserPickerView(selected: $wishUsers)
+            if repository.mode == .server {
+                WishUserPickerView(selected: $wishUsers)
+            }
 
             Button {
                 handleMoveToOwned()

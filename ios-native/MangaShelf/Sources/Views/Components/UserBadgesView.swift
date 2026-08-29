@@ -2,6 +2,7 @@ import SwiftUI
 
 /// `wishUsers` を丸バッジで並べて表示する。Web版 `UserBadges.tsx` に相当。
 struct UserBadgesView: View {
+    @EnvironmentObject private var userDisplayNames: UserDisplayNames
     let users: [UserName]
 
     var body: some View {
@@ -9,7 +10,7 @@ struct UserBadgesView: View {
             HStack(spacing: 4) {
                 ForEach(users) { user in
                     let colors = Palette.userColors(user)
-                    Text(user.rawValue)
+                    Text(userDisplayNames.label(for: user))
                         .font(.system(size: 10, weight: .bold))
                         .foregroundColor(colors.on)
                         .padding(.horizontal, 8)

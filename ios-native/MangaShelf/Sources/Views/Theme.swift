@@ -57,11 +57,11 @@ enum Palette {
     static let red500 = Color(hex: "ef4444")
     static let red100 = Color(hex: "fee2e2")
 
-    /// ユーザーごとの配色 (爽=青系, 杏=ピンク系)。
+    /// ユーザーごとの配色。
     static func userColors(_ user: UserName) -> (bg: Color, on: Color) {
         switch user {
-        case .sou: return (blue100, blue700)
-        case .an: return (pink100, pink700)
+        case .userA: return (blue100, blue700)
+        case .userB: return (pink100, pink700)
         }
     }
 }

@@ -13,6 +13,8 @@ struct ManualFormItem {
 }
 
 struct ManualFormView: View {
+    @EnvironmentObject private var repository: MangaRepository
+
     let initialTitle: String
     let onAdd: (ManualFormItem) -> Void
     let onCancel: () -> Void
@@ -34,7 +36,7 @@ struct ManualFormView: View {
     }
 
     private var disabled: Bool {
-        InputValidation.isBlank(title) || (type == .wish && wishUsers.isEmpty)
+        InputValidation.isBlank(title) || (type == .wish && repository.mode == .server && wishUsers.isEmpty)
     }
 
     var body: some View {
@@ -90,7 +92,7 @@ struct ManualFormView: View {
 
             TypeToggleView(type: $type)
 
-            if type == .wish {
+            if type == .wish && repository.mode == .server {
                 WishUserPickerView(selected: $wishUsers)
             }
 

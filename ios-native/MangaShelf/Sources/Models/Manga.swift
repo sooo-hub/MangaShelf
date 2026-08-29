@@ -1,10 +1,12 @@
 import FirebaseFirestore
 import Foundation
 
-/// 固定ユーザー2名。Web版 (`USERS`) と完全に一致させる。
+/// 固定ユーザー2名。保存用の識別子は実名を含まない(`userA`/`userB`)。
+/// 画面に出す表示名は `UserDisplayNames` が管理し、実名はFirestoreの
+/// 合言葉で保護された領域にのみ保存する(アプリ本体には埋め込まない)。
 enum UserName: String, CaseIterable, Codable, Hashable, Identifiable {
-    case sou = "爽"
-    case an = "杏"
+    case userA
+    case userB
 
     var id: String { rawValue }
 
