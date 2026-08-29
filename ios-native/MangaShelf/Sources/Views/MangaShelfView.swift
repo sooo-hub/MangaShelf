@@ -95,36 +95,45 @@ struct MangaShelfView: View {
                         .font(.system(size: 10, weight: .bold))
                         .tracking(1.5)
                         .foregroundColor(Palette.amber400)
-                    Text("📚 本棚")
-                        .font(.system(size: 20, weight: .heavy))
-                        .foregroundColor(.white)
+                    HStack(spacing: 6) {
+                        Image(systemName: "books.vertical.fill")
+                        Text("本棚")
+                    }
+                    .font(.system(size: 20, weight: .heavy))
+                    .foregroundColor(.white)
                 }
                 Spacer()
                 HStack(spacing: 8) {
                     Button {
                         Task { await performBulkUpdate() }
                     } label: {
-                        Text(bulkUpdating ? "🔄..." : "🔄 一括更新")
-                            .font(.system(size: 12, weight: .bold))
-                            .foregroundColor(bulkUpdating ? Palette.slate500 : Palette.slate400)
-                            .padding(.horizontal, 14)
-                            .padding(.vertical, 8)
-                            .background(bulkUpdating ? Palette.slate700 : Color(hex: "0f172a"))
-                            .clipShape(Capsule())
-                            .overlay(Capsule().stroke(Palette.slate700, lineWidth: 1))
+                        HStack(spacing: 4) {
+                            Image(systemName: "arrow.clockwise")
+                            if !bulkUpdating { Text("一括更新") }
+                        }
+                        .font(.system(size: 12, weight: .bold))
+                        .foregroundColor(bulkUpdating ? Palette.slate500 : Palette.slate400)
+                        .padding(.horizontal, 14)
+                        .padding(.vertical, 8)
+                        .background(bulkUpdating ? Palette.slate700 : Color(hex: "0f172a"))
+                        .clipShape(Capsule())
+                        .overlay(Capsule().stroke(Palette.slate700, lineWidth: 1))
                     }
                     .disabled(bulkUpdating)
 
                     Button {
                         showAdd = true
                     } label: {
-                        Text("＋ 追加")
-                            .font(.system(size: 14, weight: .bold))
-                            .foregroundColor(.black)
-                            .padding(.horizontal, 18)
-                            .padding(.vertical, 8)
-                            .background(Palette.amber400)
-                            .clipShape(Capsule())
+                        HStack(spacing: 4) {
+                            Image(systemName: "plus")
+                            Text("追加")
+                        }
+                        .font(.system(size: 14, weight: .bold))
+                        .foregroundColor(.black)
+                        .padding(.horizontal, 18)
+                        .padding(.vertical, 8)
+                        .background(Palette.amber400)
+                        .clipShape(Capsule())
                     }
                 }
             }
@@ -135,12 +144,22 @@ struct MangaShelfView: View {
                     .foregroundColor(Palette.amber400)
             }
 
-            TextField("", text: $search, prompt: Text("🔍 絞り込み...").foregroundColor(Palette.slate400))
-                .foregroundColor(.white)
-                .padding(.horizontal, 12)
-                .padding(.vertical, 10)
-                .background(Palette.inputBg)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            ZStack(alignment: .leading) {
+                if search.isEmpty {
+                    HStack(spacing: 6) {
+                        Image(systemName: "magnifyingglass")
+                        Text("絞り込み...")
+                    }
+                    .foregroundColor(Palette.slate400)
+                    .allowsHitTesting(false)
+                }
+                TextField("", text: $search)
+                    .foregroundColor(.white)
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 10)
+            .background(Palette.inputBg)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
 
             tabBar
 
@@ -157,27 +176,30 @@ struct MangaShelfView: View {
 
     private var tabBar: some View {
         HStack(spacing: 0) {
-            tabButton(.own, label: "📚 所持 (\(ownCount))")
-            tabButton(.wish, label: "🛒 ほしい (\(wishCount))")
+            tabButton(.own, systemName: "books.vertical.fill", label: "所持 (\(ownCount))")
+            tabButton(.wish, systemName: "cart.fill", label: "ほしい (\(wishCount))")
         }
     }
 
-    private func tabButton(_ value: ShelfTab, label: String) -> some View {
+    private func tabButton(_ value: ShelfTab, systemName: String, label: String) -> some View {
         let selected = tab == value
         return Button {
             tab = value
         } label: {
-            Text(label)
-                .font(.system(size: 12, weight: selected ? .bold : .medium))
-                .foregroundColor(selected ? Palette.amber400 : Palette.slate500)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .overlay(
-                    Rectangle()
-                        .frame(height: 2)
-                        .foregroundColor(selected ? Palette.amber400 : .clear),
-                    alignment: .bottom
-                )
+            HStack(spacing: 4) {
+                Image(systemName: systemName)
+                Text(label)
+            }
+            .font(.system(size: 12, weight: selected ? .bold : .medium))
+            .foregroundColor(selected ? Palette.amber400 : Palette.slate500)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .overlay(
+                Rectangle()
+                    .frame(height: 2)
+                    .foregroundColor(selected ? Palette.amber400 : .clear),
+                alignment: .bottom
+            )
         }
         .buttonStyle(.plain)
     }
@@ -225,7 +247,9 @@ struct MangaShelfView: View {
         } else if let error = repository.errorMessage, repository.mangas.isEmpty {
             VStack(spacing: 12) {
                 Spacer()
-                Text("⚠️").font(.system(size: 40))
+                Image(systemName: "exclamationmark.triangle.fill")
+                    .font(.system(size: 40))
+                    .foregroundColor(Palette.amber400)
                 Text(error)
                     .font(.system(size: 14, weight: .semibold))
                     .foregroundColor(Palette.slate600)
@@ -257,7 +281,9 @@ struct MangaShelfView: View {
     private var emptyStateView: some View {
         VStack(spacing: 8) {
             Spacer()
-            Text(tab == .own ? "📭" : "🛒").font(.system(size: 40))
+            Image(systemName: tab == .own ? "tray" : "cart.fill")
+                .font(.system(size: 40))
+                .foregroundColor(Palette.slate400)
             Text(search.isEmpty && userFilter == .all ? "まだ登録がありません" : "該当なし")
                 .font(.system(size: 15, weight: .semibold))
                 .foregroundColor(Palette.slate400)
@@ -309,7 +335,7 @@ struct MangaShelfView: View {
         if !changed.isEmpty {
             bulkResult = BulkUpdateResult(items: changed)
         } else {
-            bulkStatus = "✅ 更新なし（全て最新）"
+            bulkStatus = "更新なし（全て最新）"
             try? await Task.sleep(nanoseconds: 3_000_000_000)
             bulkStatus = ""
         }

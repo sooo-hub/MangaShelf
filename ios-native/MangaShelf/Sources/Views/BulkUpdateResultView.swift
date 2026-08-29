@@ -34,9 +34,12 @@ struct BulkUpdateResultView: View {
         VStack(alignment: .leading, spacing: 16) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("🔄 一括更新完了")
-                        .font(.system(size: 17, weight: .heavy))
-                        .foregroundColor(Palette.slate800)
+                    HStack(spacing: 6) {
+                        Image(systemName: "arrow.clockwise")
+                        Text("一括更新完了")
+                    }
+                    .font(.system(size: 17, weight: .heavy))
+                    .foregroundColor(Palette.slate800)
                     Text("\(result.items.count)件の巻数が更新されました")
                         .font(.system(size: 12))
                         .foregroundColor(Palette.slate400)
@@ -71,12 +74,12 @@ struct BulkUpdateResultView: View {
             if totalPages > 1 {
                 HStack(spacing: 12) {
                     Spacer()
-                    Button("◀") { page -= 1 }
+                    Button { page -= 1 } label: { Image(systemName: "chevron.left") }
                         .disabled(page == 0)
                     Text("\(page + 1) / \(totalPages)")
                         .font(.system(size: 12))
                         .foregroundColor(Palette.slate500)
-                    Button("▶") { page += 1 }
+                    Button { page += 1 } label: { Image(systemName: "chevron.right") }
                         .disabled(page == totalPages - 1)
                     Spacer()
                 }

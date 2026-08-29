@@ -21,10 +21,11 @@ struct MangaCardView: View {
                     VStack(alignment: .leading, spacing: 4) {
                         HStack(spacing: 6) {
                             if isWish {
-                                badge(text: "🛒 ほしい", bg: Palette.yellow50, fg: Palette.yellow800)
+                                badge(systemName: "cart.fill", label: "ほしい", bg: Palette.yellow50, fg: Palette.yellow800)
                             } else {
                                 badge(
-                                    text: complete ? "✓ 全巻" : "📚 所持",
+                                    systemName: complete ? "checkmark" : "books.vertical.fill",
+                                    label: complete ? "全巻" : "所持",
                                     bg: complete ? Palette.green100 : Palette.sky100,
                                     fg: complete ? Palette.green800 : Palette.sky700
                                 )
@@ -56,7 +57,9 @@ struct MangaCardView: View {
                     Spacer(minLength: 8)
                     VStack(alignment: .trailing, spacing: 2) {
                         if isWish {
-                            Text("🛒").font(.system(size: 22))
+                            Image(systemName: "cart.fill")
+                                .font(.system(size: 22))
+                                .foregroundColor(Palette.slate400)
                         } else {
                             HStack(alignment: .firstTextBaseline, spacing: 1) {
                                 Text("\(owned.count)")
@@ -98,13 +101,16 @@ struct MangaCardView: View {
         .buttonStyle(.plain)
     }
 
-    private func badge(text: String, bg: Color, fg: Color) -> some View {
-        Text(text)
-            .font(.system(size: 10, weight: .bold))
-            .foregroundColor(fg)
-            .padding(.horizontal, 8)
-            .padding(.vertical, 1)
-            .background(bg)
-            .clipShape(Capsule())
+    private func badge(systemName: String, label: String, bg: Color, fg: Color) -> some View {
+        HStack(spacing: 3) {
+            Image(systemName: systemName)
+            Text(label)
+        }
+        .font(.system(size: 10, weight: .bold))
+        .foregroundColor(fg)
+        .padding(.horizontal, 8)
+        .padding(.vertical, 1)
+        .background(bg)
+        .clipShape(Capsule())
     }
 }

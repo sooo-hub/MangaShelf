@@ -51,6 +51,7 @@ struct ManualFormView: View {
                 HStack(spacing: 8) {
                     TextField("最新巻数", text: $latestVolumeText)
                         .keyboardType(.numberPad)
+                        .foregroundColor(Palette.slate800)
                         .padding(.horizontal, 12)
                         .padding(.vertical, 10)
                         .background(Palette.slate50)
@@ -143,6 +144,7 @@ struct ManualFormView: View {
 
     private func textField(_ placeholder: String, text: Binding<String>) -> some View {
         TextField(placeholder, text: text)
+            .foregroundColor(Palette.slate800)
             .padding(.horizontal, 12)
             .padding(.vertical, 10)
             .background(Palette.slate50)

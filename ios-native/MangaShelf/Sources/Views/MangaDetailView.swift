@@ -113,13 +113,16 @@ struct MangaDetailView: View {
                 Button {
                     Task { await handleFetchLatest() }
                 } label: {
-                    Text(fetching ? "🔍 取得中..." : "🔄 最新刊を確認")
-                        .font(.system(size: 12, weight: .bold))
-                        .foregroundColor(fetching ? Palette.slate400 : Palette.sky700)
-                        .padding(.horizontal, 12)
-                        .padding(.vertical, 8)
-                        .background(fetching ? Palette.slate100 : Palette.sky100)
-                        .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    HStack(spacing: 4) {
+                        Image(systemName: fetching ? "magnifyingglass" : "arrow.clockwise")
+                        Text(fetching ? "取得中..." : "最新刊を確認")
+                    }
+                    .font(.system(size: 12, weight: .bold))
+                    .foregroundColor(fetching ? Palette.slate400 : Palette.sky700)
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(fetching ? Palette.slate100 : Palette.sky100)
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
                 }
                 .disabled(fetching)
 
@@ -130,6 +133,7 @@ struct MangaDetailView: View {
                 TextField("巻", value: $latestVolume, format: .number)
                     .keyboardType(.numberPad)
                     .multilineTextAlignment(.center)
+                    .foregroundColor(Palette.slate800)
                     .frame(width: 60)
                     .padding(.horizontal, 8)
                     .padding(.vertical, 6)
@@ -157,6 +161,7 @@ struct MangaDetailView: View {
                 .font(.system(size: 12))
                 .foregroundColor(Palette.slate500)
             TextField("例: ジョジョの奇妙な冒険", text: $seriesName)
+                .foregroundColor(Palette.slate800)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 10)
                 .background(Palette.slate50)
@@ -174,16 +179,19 @@ struct MangaDetailView: View {
             Button {
                 handleMoveToOwned()
             } label: {
-                Text("📚 買った！持っているに移動")
-                    .font(.system(size: 14, weight: .bold))
-                    .foregroundColor(Palette.green600)
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 14)
-                    .background(Color(hex: "f0fdf4"))
-                    .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
-                    .overlay(
-                        RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.green300, lineWidth: 2)
-                    )
+                HStack(spacing: 6) {
+                    Image(systemName: "books.vertical.fill")
+                    Text("買った！持っているに移動")
+                }
+                .font(.system(size: 14, weight: .bold))
+                .foregroundColor(Palette.green600)
+                .frame(maxWidth: .infinity)
+                .padding(.vertical, 14)
+                .background(Color(hex: "f0fdf4"))
+                .clipShape(RoundedRectangle(cornerRadius: 12, style: .continuous))
+                .overlay(
+                    RoundedRectangle(cornerRadius: 12, style: .continuous).stroke(Palette.green300, lineWidth: 2)
+                )
             }
             .buttonStyle(.plain)
         }
@@ -211,16 +219,19 @@ struct MangaDetailView: View {
                 Button {
                     parts.append(MangaPart(id: MangaRepository.nowEpochMillis(), name: "", from: "", to: ""))
                 } label: {
-                    Text("＋ 追加")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(Palette.slate600)
-                        .padding(.horizontal, 10)
-                        .padding(.vertical, 4)
-                        .background(Palette.slate100)
-                        .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
-                        .overlay(
-                            RoundedRectangle(cornerRadius: 6, style: .continuous).stroke(Palette.slate200, lineWidth: 1)
-                        )
+                    HStack(spacing: 3) {
+                        Image(systemName: "plus")
+                        Text("追加")
+                    }
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(Palette.slate600)
+                    .padding(.horizontal, 10)
+                    .padding(.vertical, 4)
+                    .background(Palette.slate100)
+                    .clipShape(RoundedRectangle(cornerRadius: 6, style: .continuous))
+                    .overlay(
+                        RoundedRectangle(cornerRadius: 6, style: .continuous).stroke(Palette.slate200, lineWidth: 1)
+                    )
                 }
                 .buttonStyle(.plain)
             }
@@ -228,6 +239,7 @@ struct MangaDetailView: View {
             ForEach($parts) { $part in
                 HStack(spacing: 6) {
                     TextField("第1部", text: $part.name)
+                        .foregroundColor(Palette.slate800)
                         .padding(.horizontal, 8)
                         .padding(.vertical, 8)
                         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Palette.slate200, lineWidth: 1))
@@ -235,6 +247,7 @@ struct MangaDetailView: View {
                     TextField("1", text: $part.from)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
+                        .foregroundColor(Palette.slate800)
                         .frame(width: 44)
                         .padding(.vertical, 8)
                         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Palette.slate200, lineWidth: 1))
@@ -244,6 +257,7 @@ struct MangaDetailView: View {
                     TextField("5", text: $part.to)
                         .keyboardType(.numberPad)
                         .multilineTextAlignment(.center)
+                        .foregroundColor(Palette.slate800)
                         .frame(width: 44)
                         .padding(.vertical, 8)
                         .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Palette.slate200, lineWidth: 1))
@@ -325,16 +339,16 @@ struct MangaDetailView: View {
 
     private func handleFetchLatest() async {
         fetching = true
-        fetchMsg = "🔍 検索中..."
+        fetchMsg = "検索中..."
         let result = await RakutenBooksAPI.fetchLatestVolume(title: current.title)
         if result.latestVolume > 0 { latestVolume = result.latestVolume }
         if !result.status.isEmpty { status = result.status }
         if result.latestVolume > 0 {
-            fetchMsg = "✅ 最新\(result.latestVolume)巻 / \(result.status)"
+            fetchMsg = "最新\(result.latestVolume)巻 / \(result.status)"
         } else if !result.status.isEmpty {
-            fetchMsg = "✅ \(result.status)（巻数はAniListに未登録 - 手動で入力してください）"
+            fetchMsg = "\(result.status)（巻数はAniListに未登録 - 手動で入力してください）"
         } else {
-            fetchMsg = "⚠️ 取得できませんでした"
+            fetchMsg = "取得できませんでした"
         }
         fetching = false
     }

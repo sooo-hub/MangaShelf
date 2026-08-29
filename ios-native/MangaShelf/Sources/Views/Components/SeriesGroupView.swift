@@ -42,9 +42,12 @@ struct SeriesGroupView: View {
                             .background(Palette.slate700)
                             .clipShape(Capsule())
                         if allComplete {
-                            Text("✓ 全部揃い")
-                                .font(.system(size: 10, weight: .bold))
-                                .foregroundColor(Palette.green400)
+                            HStack(spacing: 3) {
+                                Image(systemName: "checkmark")
+                                Text("全部揃い")
+                            }
+                            .font(.system(size: 10, weight: .bold))
+                            .foregroundColor(Palette.green400)
                         }
                     }
                     Text(seriesName)
@@ -69,8 +72,8 @@ struct SeriesGroupView: View {
                             .font(.system(size: 10))
                             .foregroundColor(Palette.slate500)
                     }
-                    Text(open ? "▲" : "▼")
-                        .font(.system(size: 14))
+                    Image(systemName: open ? "chevron.up" : "chevron.down")
+                        .font(.system(size: 12, weight: .semibold))
                         .foregroundColor(Palette.slate400)
                 }
             }

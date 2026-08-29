@@ -35,7 +35,7 @@ struct AddMangaView: View {
                                 .font(.system(size: 13))
                                 .foregroundColor(Palette.red500)
                             if !showManual {
-                                manualEntryButton(text: "✏️ 手動で入力する", filled: true)
+                                manualEntryButton(label: "手動で入力する", filled: true)
                             }
                         }
                     }
@@ -65,7 +65,7 @@ struct AddMangaView: View {
                     if !showManual && !searching && errorMessage.isEmpty && candidates.isEmpty && !query.isEmpty {
                         HStack {
                             Spacer()
-                            manualEntryButton(text: "✏️ 手動で入力する", filled: false)
+                            manualEntryButton(label: "手動で入力する", filled: false)
                             Spacer()
                         }
                     }
@@ -73,7 +73,7 @@ struct AddMangaView: View {
                     if !showManual && errorMessage.isEmpty && !searching && candidates.isEmpty && query.isEmpty {
                         HStack {
                             Spacer()
-                            manualEntryButton(text: "✏️ 検索せずに手動入力", filled: true)
+                            manualEntryButton(label: "検索せずに手動入力", filled: true)
                             Spacer()
                         }
                         .padding(.top, 8)
@@ -100,6 +100,7 @@ struct AddMangaView: View {
     private var searchBar: some View {
         HStack(spacing: 8) {
             TextField("タイトルを入力...", text: $query)
+                .foregroundColor(Palette.slate800)
                 .padding(.horizontal, 12)
                 .padding(.vertical, 12)
                 .background(Color.white)
@@ -124,20 +125,23 @@ struct AddMangaView: View {
         }
     }
 
-    private func manualEntryButton(text: String, filled: Bool) -> some View {
+    private func manualEntryButton(label: String, filled: Bool) -> some View {
         Button {
             showManual = true
         } label: {
-            Text(text)
-                .font(.system(size: 13, weight: filled ? .semibold : .regular))
-                .foregroundColor(filled ? Palette.slate800 : Palette.slate400)
-                .padding(.horizontal, 14)
-                .padding(.vertical, 8)
-                .background(filled ? Palette.slate50 : Color.clear)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
-                .overlay(
-                    filled ? RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Palette.slate200, lineWidth: 1) : nil
-                )
+            HStack(spacing: 4) {
+                Image(systemName: "pencil")
+                Text(label)
+            }
+            .font(.system(size: 13, weight: filled ? .semibold : .regular))
+            .foregroundColor(filled ? Palette.slate800 : Palette.slate400)
+            .padding(.horizontal, 14)
+            .padding(.vertical, 8)
+            .background(filled ? Palette.slate50 : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            .overlay(
+                filled ? RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Palette.slate200, lineWidth: 1) : nil
+            )
         }
         .buttonStyle(.plain)
     }
@@ -149,7 +153,7 @@ struct AddMangaView: View {
         errorMessage = ""
         candidates = []
         showManual = false
-        statusMsg = "🔍 検索中..."
+        statusMsg = "検索中..."
         do {
             let results = try await AniListService.searchManga(title: trimmed)
             candidates = results

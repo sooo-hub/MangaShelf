@@ -34,9 +34,12 @@ struct CandidateRowView: View {
             }
 
             if alreadyAdded {
-                Text("✓ 追加済み")
-                    .font(.system(size: 12))
-                    .foregroundColor(Palette.slate400)
+                HStack(spacing: 4) {
+                    Image(systemName: "checkmark")
+                    Text("追加済み")
+                }
+                .font(.system(size: 12))
+                .foregroundColor(Palette.slate400)
             } else {
                 TypeToggleView(type: $type)
 
@@ -77,25 +80,28 @@ struct TypeToggleView: View {
 
     var body: some View {
         HStack(spacing: 2) {
-            segment(.own, label: "📚 持ってる")
-            segment(.wish, label: "🛒 ほしい")
+            segment(.own, systemName: "books.vertical.fill", label: "持ってる")
+            segment(.wish, systemName: "cart.fill", label: "ほしい")
         }
         .padding(2)
         .background(Palette.slate200)
         .clipShape(RoundedRectangle(cornerRadius: 10, style: .continuous))
     }
 
-    private func segment(_ value: MangaType, label: String) -> some View {
+    private func segment(_ value: MangaType, systemName: String, label: String) -> some View {
         Button {
             type = value
         } label: {
-            Text(label)
-                .font(.system(size: 13, weight: .semibold))
-                .foregroundColor(type == value ? .white : Palette.slate600)
-                .frame(maxWidth: .infinity)
-                .padding(.vertical, 8)
-                .background(type == value ? Palette.slate800 : Color.clear)
-                .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+            HStack(spacing: 4) {
+                Image(systemName: systemName)
+                Text(label)
+            }
+            .font(.system(size: 13, weight: .semibold))
+            .foregroundColor(type == value ? .white : Palette.slate600)
+            .frame(maxWidth: .infinity)
+            .padding(.vertical, 8)
+            .background(type == value ? Palette.slate800 : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
         }
         .buttonStyle(.plain)
     }
