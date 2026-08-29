@@ -29,6 +29,9 @@ struct MangaShelfView: View {
     @State private var bulkUpdating = false
     @State private var bulkStatus = ""
     @State private var bulkResult: BulkUpdateResult?
+    @State private var showStorageModeSwitch = false
+    @State private var showPasscodePrompt = false
+    @State private var passcodeInput = ""
 
     var body: some View {
         VStack(spacing: 0) {
@@ -47,6 +50,40 @@ struct MangaShelfView: View {
         .sheet(item: $bulkResult) { result in
             BulkUpdateResultView(result: result) { bulkResult = nil }
                 .presentationDetents([.medium, .large])
+        }
+        .alert("合言葉", isPresented: $showPasscodePrompt) {
+            TextField("合言葉", text: $passcodeInput)
+            Button("確認") {
+                let code = passcodeInput
+                passcodeInput = ""
+                Task {
+                    if await PasscodeGate.verifyStorageModeSwitchPasscode(code) {
+                        showStorageModeSwitch = true
+                    }
+                }
+            }
+            Button("キャンセル", role: .cancel) {
+                passcodeInput = ""
+            }
+        }
+        .confirmationDialog(
+            repository.mode == .local ? "サーバー同期モードに切り替えますか？" : "端末内保存モードに戻しますか？",
+            isPresented: $showStorageModeSwitch,
+            titleVisibility: .visible
+        ) {
+            Button(
+                repository.mode == .local ? "サーバー同期に切り替える" : "端末内保存に戻す",
+                role: .destructive
+            ) {
+                repository.switchStorageMode(to: repository.mode == .local ? .server : .local)
+            }
+            Button("キャンセル", role: .cancel) {}
+        } message: {
+            Text(
+                repository.mode == .local
+                    ? "現在: 端末内保存\n切り替えるとサーバー上の共有本棚（端末内のデータとは別物）が表示されます。"
+                    : "現在: サーバー同期\n切り替えると端末内保存のデータに戻ります。"
+            )
         }
     }
 
@@ -91,10 +128,21 @@ struct MangaShelfView: View {
         VStack(alignment: .leading, spacing: 10) {
             HStack(alignment: .top) {
                 VStack(alignment: .leading, spacing: 2) {
-                    Text("MY MANGA SHELF")
-                        .font(.system(size: 10, weight: .bold))
-                        .tracking(1.5)
-                        .foregroundColor(Palette.amber400)
+                    HStack(spacing: 4) {
+                        Text("MY MANGA SHELF")
+                            .font(.system(size: 10, weight: .bold))
+                            .tracking(1.5)
+                            .foregroundColor(Palette.amber400)
+                            .onLongPressGesture(minimumDuration: 2.0) {
+                                passcodeInput = ""
+                                showPasscodePrompt = true
+                            }
+                        if repository.mode == .server {
+                            Text("サーバー同期中")
+                                .font(.system(size: 8, weight: .bold))
+                                .foregroundColor(Palette.green400)
+                        }
+                    }
                     HStack(spacing: 6) {
                         Image(systemName: "books.vertical.fill")
                         Text("本棚")
